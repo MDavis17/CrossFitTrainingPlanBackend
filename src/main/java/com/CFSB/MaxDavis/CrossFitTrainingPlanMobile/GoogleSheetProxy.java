@@ -63,34 +63,47 @@ public class GoogleSheetProxy {
         // [Metcon, Gymnastics, Oly, Power, Running]
         String wodParts[] = {"None","None","None","None","None"};
 
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String range = "Class Data!A3:K";
-        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-        ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
-                .execute();
-        List<List<Object>> values = response.getValues();
-        
-        //will want to  pick the correct row from these values by checking the row date (row[0]) against the date that is passed in
-
         //getting parts of date
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH)+1; // months start at 0
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String passedDateStr = String.format("%d/%d/%d",month,day,year);
 
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+//        final String range = "Class Data!A3:K";
+        String range = "A3:A38";
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        ValueRange response = service.spreadsheets().values()
+                .get(spreadsheetId, range)
+                .execute();
+        List<List<Object>> dateColumn = response.getValues();
+//        List<Object> dateColumn = response.setMajorDimension("COLUMNS").getValues().get(0);
+        int rowNum = 3; // first row with data in sheet
+//        for(Object d : dateColumn) {
 
+        for(int i = 0; i< dateColumn.size(); i++) {
+            String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
+            if(dStr.equals(passedDateStr)) {
+                rowNum = i+3;
+                break;
+            }
+        }
 
-        //TODO: find correct row to get data from (using passed in date)
-        List<Object> row = values.get(0);
+        // now get the correct row from sheet
+        range = String.format("A%d:K%d",rowNum,rowNum);
+        response = service.spreadsheets().values()
+                .get(spreadsheetId, range)
+                .execute();
+        List<Object> wodRow = response.getValues().get(0);
 
         // i is wodParts index, j is index for the workout types in the sheet
         for(int i = 0, j = 1; i < wodParts.length; i++,j+=2) {
-            if(row.get(j).toString() != "") {
-                wodParts[i] = row.get(j).toString();
+            if(wodRow.get(j).toString() != "") {
+                wodParts[i] = wodRow.get(j).toString();
             }
         }
 
@@ -99,8 +112,6 @@ public class GoogleSheetProxy {
 //        String oly = row.get(5).toString();
 //        String power = row.get(7).toString();
 //        String running = row.get(9).toString();
-
-
         return wodParts;
     }
 
