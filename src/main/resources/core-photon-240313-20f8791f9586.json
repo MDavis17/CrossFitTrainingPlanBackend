@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "core-photon-240313",
+  "private_key_id": "20f8791f95867871a64ccad5689e6ad0e40f9e58",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDzP/0W62M/yRGs\nfiHU6fMCeFZhPDp8XmfLZainj7YluwTWRQVhbtXPMFMDPw7ABU+ICblA6rG+Sqtn\nUsMdrNkC8Te5tT2Ewp8oAA6QK9uPymTnUfuqgs0+8aRG46yXoZegfNc6BnwH8UEB\n7TIvchPB63ZL10MB/afXSv/3YDttLS78T4LC+oTTsGOHfSq4gf0CGjCdEInszvT6\n0xGARkptD3H7qnE0YMZIjy0Am+jqJeuh61eIMndWSuL0v9J5/E2MtqJ40yPFhBRl\nxW4A54aMZK7yzzXiIHmmVewZDvPuycmq3V3LXlT5NsK72K+PjNwv3vHDqcsn2nkX\nf6MU2hEHAgMBAAECggEAOAjgi3wT8+ikqqCvuHVgJoyEEYgnTOkObftwG5Fue0iW\nt6lUsPowRLc0GEZZZoCSrprW0w59fYGD9JxLGDXuE9BvbtdCYafXtAY3VJzVykzs\na6EmIURadYqCtlXSN2fhHvZDOjmuLsIzoHb8nZNg28YbDSN8ayP8mwrK5jiD2AUi\nlWXRU3xdt19uh7IcneKib0wD1cMlQA7pOE7yew+zISLCh0kcCPZWM/ihFueGe62n\nF9VjQrzUrbwTtsqkqqn0yPV8XrOWFEopFmHfNsnT3pc4TGRO5/euIELIqRtS0e/Q\nJeQL3Tlufm+TRx+5JlCMnAzngWv0MxgD6AV9vHZykQKBgQD+HBuP9J64TA1rc+3L\n4Gz/hR5u8CVE81mD71DS2yTqp7N0CJkvCMVYIKGAIIRYIqjGCuOVK8rDhmtW8YDO\noFBVXdlQ7lM9dYgLfZBRYZN8Jsk/FOmamB1bCR1xq+cVquMYpH2VX/db8vM8PBOR\np9+hTXUfL+eOMoQgMb3IqM8JfwKBgQD1DzNxxmk1YSRElZNVR8YIbTkFHgXKPHQD\nMZdkx/2tJgh8AdN+4A6vLk6eFG2MSD27QuGnvH+5MdrgSo+wUJkBAIzixk7HZuOt\nme9BecjlrYmMmTpI7Jpf4fdDTQ5vFzVr5Wxi16rw9IaLWpmmv1dPZGn/6in0II6c\nUWTDaYNseQKBgQCWZQRbGyilYz2+Dwr604UvZhYxCqjEOlMMpyNq6JDc4Qxw7HXd\nRI+oLQfo0VYC4+CH9gHkU9raBkCZYK4fnPpuy/DG2YcipOE0C8jSobGslTgewb3Q\n5Z7aNnbaxCcsx8tI1nINapL4NL6JM/VRC85rpXBgWPXvTy6r70Sn8mE2+QKBgEmY\nkRigP8R6Mgwu55p6/axWMQOqao677RNwd0kbDsJLY8zqN3wpCf/uZknvVJ8GqxNs\nGJzpbWpO4K7vdYu8CNdWNPl+GPalncbrLgF5862WmnKRKgHwnMQi9sFNiQIv9Ck9\nM3nTz1Ch/y4mvXJokG4VeAgVaRgaFvo3L43ISGHxAoGBAJncoD83f/wjQxCEP4mi\nD5JKG/WVi7AepnM4+oTifMv1FL7OG+TVdNTZtVAz+lXo9vHmJxFxZ/6hv151pYkT\nxZa62fC4xU1mfwWZVpVhQgStVFnS9I2swCvxh+UcNO/GuWG2yAq/fx7hx/9sbTbn\nGIHD0Ch4aR3F4i0R0Qf5PCHh\n-----END PRIVATE KEY-----\n",
+  "client_email": "crossfit-training-backend@core-photon-240313.iam.gserviceaccount.com",
+  "client_id": "103749912689158354611",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/crossfit-training-backend%40core-photon-240313.iam.gserviceaccount.com"
+}

@@ -22,9 +22,11 @@ public class WODController {
 //        return new WOD(metcon,gymnastics,oly,power,running);
 //    }
 
+
     @RequestMapping ("/wod")
     public WOD wod() throws IOException, GeneralSecurityException{
-        String[] wodParts = sheetProxy.getWOD(new Date());
+//        String[] wodParts = sheetProxy.getWOD(new Date());
+        String[] wodParts = sheetProxy.getWOD_2LO(new Date());
 //        sheetProxy.printWODs(new Date());
         return new WOD(wodParts[0],wodParts[1],wodParts[2],wodParts[3],wodParts[4]);
     }

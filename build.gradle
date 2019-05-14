@@ -11,6 +11,8 @@ group = 'com.CFSB.MaxDavis'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+mainClassName = 'com.CFSB.MaxDavis.CrossFitTrainingPlanMobile.CrossFitTrainingPlanMobileApplication'
+
 repositories {
 	mavenCentral()
 }
@@ -28,6 +30,12 @@ dependencies {
 		exclude group: 'org.mortbay.jetty', module: 'servlet-api'
 	}
 //	compile group: 'com.google.apis', name: 'google-api-services-sheets', version: 'v4-rev563-1.25.0'
+	
+	//for using GooglePromptReceiver in oauth protocol
+	compile group: 'com.google.api-client', name: 'google-api-client-java6', version: '1.28.0'
+	// for SQLAdminScopes
+	compile group: 'com.google.apis', name: 'google-api-services-sqladmin', version: 'v1beta4-rev46-1.20.0'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
