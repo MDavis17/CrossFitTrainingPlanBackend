@@ -51,7 +51,8 @@ public class GoogleSheetProxy {
                 .get(spreadsheetId, range)
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
-        int rowNum = 3; // first row with data in sheet
+
+        int rowNum = 40; // comfortably in empty row
 
         for(int i = 0; i< dateColumn.size(); i++) {
             String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
@@ -61,17 +62,20 @@ public class GoogleSheetProxy {
             }
         }
 
-        // now get the correct row from sheet
-        range = String.format("A%d:K%d",rowNum,rowNum);
-        response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
-                .execute();
-        List<Object> wodRow = response.getValues().get(0);
+        // only fill wodParts array if we have a date match
+        if(rowNum != 40) {
+            // now get the correct row from sheet
+            range = String.format("A%d:K%d",rowNum,rowNum);
+            response = service.spreadsheets().values()
+                    .get(spreadsheetId, range)
+                    .execute();
+            List<Object> wodRow = response.getValues().get(0);
 
-        // i is wodParts index, j is index for the workout types in the sheet
-        for(int i = 0, j = 1; i < wodParts.length; i++,j+=2) {
-            if(wodRow.get(j).toString() != "") {
-                wodParts[i] = wodRow.get(j).toString();
+            // i is wodParts index, j is index for the workout types in the sheet
+            for(int i = 0, j = 1; i < wodParts.length; i++,j+=2) {
+                if(wodRow.get(j).toString() != "") {
+                    wodParts[i] = wodRow.get(j).toString();
+                }
             }
         }
         return wodParts;
