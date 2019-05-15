@@ -26,17 +26,17 @@ public class GoogleSheetProxy {
     private static final String CREDENTIALS_FILE_PATH = "/core-photon-240313-20f8791f9586.json";
 
 
-    public String[] getWOD(Date date) throws IOException, GeneralSecurityException {
+    public String[] getWOD(String date) throws IOException, GeneralSecurityException {
         // [Metcon, Gymnastics, Oly, Power, Running]
         String wodParts[] = {"None","None","None","None","None"};
 
-        //getting parts of date
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
-        calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1; // months start at 0
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String passedDateStr = String.format("%d/%d/%d",month,day,year);
+        //format month and day to remove leading 0s (1 rather than 01)
+        String[] dateParts = date.split("/");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        date = month+"/"+day+"/"+year;
+
 
         //OAuth code flow
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -55,7 +55,7 @@ public class GoogleSheetProxy {
 
         for(int i = 0; i< dateColumn.size(); i++) {
             String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
-            if(dStr.equals(passedDateStr)) {
+            if(dStr.equals(date)) {
                 rowNum = i+3;
                 break;
             }
