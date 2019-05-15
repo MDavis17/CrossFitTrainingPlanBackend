@@ -27,8 +27,9 @@ public class GoogleSheetProxy {
 
 
     public String[] getWOD(String date) throws IOException, GeneralSecurityException {
-        // [Metcon, Gymnastics, Oly, Power, Running]
+        // [Metcon, metconStatus, Gymnastics, gymnasticsStatus, Oly, olyStatus, Power, powerStatus, Running, runningStatus]
         String wodParts[] = {"None","None","None","None","None"};
+//        String wodParts[] = {"None","FALSE","None","FALSE","None","FALSE","None","FALSE","None","FALSE"};
 
         //format month and day to remove leading 0s (1 rather than 01)
         String[] dateParts = date.split("/");
@@ -52,18 +53,20 @@ public class GoogleSheetProxy {
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
 
-        int rowNum = 40; // comfortably in empty row
+        int rowNum = -1; // unused value
+        boolean foundMatch = false;
 
         for(int i = 0; i< dateColumn.size(); i++) {
             String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
             if(dStr.equals(date)) {
                 rowNum = i+3;
+                foundMatch = true;
                 break;
             }
         }
 
         // only fill wodParts array if we have a date match
-        if(rowNum != 40) {
+        if(foundMatch) {
             // now get the correct row from sheet
             range = String.format("A%d:K%d",rowNum,rowNum);
             response = service.spreadsheets().values()
