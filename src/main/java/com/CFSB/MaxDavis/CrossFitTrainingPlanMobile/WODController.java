@@ -33,6 +33,6 @@ public class WODController {
         }
 
         String[] wodParts = sheetProxy.getWOD(selectedDate);
-        return new WOD(wodParts[0],wodParts[1],wodParts[2],wodParts[3],wodParts[4]);
+        return new WOD(wodParts[0],wodParts[1],wodParts[2],wodParts[3],wodParts[4],wodParts[5],wodParts[6],wodParts[7],wodParts[8],wodParts[9]);
     }
 }

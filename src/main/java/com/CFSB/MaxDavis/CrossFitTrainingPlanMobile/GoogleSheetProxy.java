@@ -28,8 +28,7 @@ public class GoogleSheetProxy {
 
     public String[] getWOD(String date) throws IOException, GeneralSecurityException {
         // [Metcon, metconStatus, Gymnastics, gymnasticsStatus, Oly, olyStatus, Power, powerStatus, Running, runningStatus]
-        String wodParts[] = {"None","None","None","None","None"};
-//        String wodParts[] = {"None","FALSE","None","FALSE","None","FALSE","None","FALSE","None","FALSE"};
+        String wodParts[] = {"None","FALSE","None","FALSE","None","FALSE","None","FALSE","None","FALSE"};
 
         //format month and day to remove leading 0s (1 rather than 01)
         String[] dateParts = date.split("/");
@@ -74,11 +73,8 @@ public class GoogleSheetProxy {
                     .execute();
             List<Object> wodRow = response.getValues().get(0);
 
-            // i is wodParts index, j is index for the workout types in the sheet
-            for(int i = 0, j = 1; i < wodParts.length; i++,j+=2) {
-                if(wodRow.get(j).toString() != "") {
-                    wodParts[i] = wodRow.get(j).toString();
-                }
+            for(int i = 0; i < wodParts.length; i++) {
+                wodParts[i] = wodRow.get(i+1).toString();
             }
         }
         return wodParts;
