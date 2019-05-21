@@ -1,5 +1,6 @@
 package com.CFSB.MaxDavis.CrossFitTrainingPlanMobile;
 
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ public class WODController {
     GoogleSheetProxy sheetProxy = new GoogleSheetProxy();
 
     @RequestMapping ("/wod")
-    public WOD wod(@RequestParam(value = "date",defaultValue = "") String date) throws IOException, GeneralSecurityException{
+    public WOD wod(@RequestParam(value = "date",defaultValue = "") String date) throws IOException, GeneralSecurityException {
         int month,day,year;
         String selectedDate;
 
@@ -34,5 +35,10 @@ public class WODController {
 
         String[] wodParts = sheetProxy.getWOD(selectedDate);
         return new WOD(wodParts[0],wodParts[1],wodParts[2],wodParts[3],wodParts[4],wodParts[5],wodParts[6],wodParts[7],wodParts[8],wodParts[9]);
+    }
+
+    @RequestMapping("/completion")
+    public UpdateValuesResponse toggle(@RequestParam(value = "newState",defaultValue = "") boolean newState, @RequestParam(value = "dateRow",defaultValue = "") int dateRow, @RequestParam(value = "partCol",defaultValue = "") String partCol) throws IOException, GeneralSecurityException {
+        return sheetProxy.toggleWodPart(dateRow,partCol,newState);
     }
 }

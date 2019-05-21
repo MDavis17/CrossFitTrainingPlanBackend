@@ -7,6 +7,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.*;
@@ -22,7 +24,8 @@ public class GoogleSheetProxy {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+//    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+    private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS,SheetsScopes.DRIVE,SheetsScopes.DRIVE_FILE);
     private static final String CREDENTIALS_FILE_PATH = "/core-photon-240313-20f8791f9586.json";
 
 
@@ -37,16 +40,8 @@ public class GoogleSheetProxy {
         int year = Integer.parseInt(dateParts[2]);
         date = month+"/"+day+"/"+year;
 
-
-        //OAuth code flow
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         String range = "A3:A38";
-        GoogleCredential credential = GoogleCredential.fromStream(GoogleSheetProxy.class.getResourceAsStream(CREDENTIALS_FILE_PATH))
-                .createScoped(SCOPES);
-
-        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
+        Sheets service = getSheetService();
         ValueRange response = service.spreadsheets().values()
                 .get(spreadsheetId, range)
                 .execute();
@@ -78,6 +73,34 @@ public class GoogleSheetProxy {
             }
         }
         return wodParts;
+    }
+
+    public Sheets getSheetService() throws IOException, GeneralSecurityException{
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        GoogleCredential credential = GoogleCredential.fromStream(GoogleSheetProxy.class.getResourceAsStream(CREDENTIALS_FILE_PATH))
+                .createScoped(SCOPES);
+
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        return service;
+    }
+
+    public UpdateValuesResponse toggleWodPart(int dateRow, String partCol, boolean newState) throws IOException, GeneralSecurityException{
+        Sheets service = getSheetService();
+        ValueRange requestBody = new ValueRange();
+        List<List<Object>> values = new ArrayList<>();
+        List<Object> vals = new ArrayList<>();
+        vals.add(newState);
+        values.add(vals);
+        requestBody.setValues(values);
+        String range = partCol+dateRow;
+        System.out.println(requestBody);
+        String valueInputOption = "RAW";
+        Sheets.Spreadsheets.Values.Update request = service.spreadsheets().values().update(spreadsheetId,range,requestBody);
+        request.setValueInputOption(valueInputOption);
+
+        return request.execute();
     }
 
 }
