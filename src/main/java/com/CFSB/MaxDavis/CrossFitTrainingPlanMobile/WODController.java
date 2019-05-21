@@ -38,7 +38,7 @@ public class WODController {
     }
 
     @RequestMapping("/completion")
-    public UpdateValuesResponse toggle(@RequestParam(value = "newState",defaultValue = "") boolean newState, @RequestParam(value = "dateRow",defaultValue = "") int dateRow, @RequestParam(value = "partCol",defaultValue = "") String partCol) throws IOException, GeneralSecurityException {
-        return sheetProxy.toggleWodPart(dateRow,partCol,newState);
+    public UpdateValuesResponse toggle(@RequestParam(value = "newState",defaultValue = "") boolean newState, @RequestParam(value = "date",defaultValue = "") String date, @RequestParam(value = "partCol",defaultValue = "") String partCol) throws IOException, GeneralSecurityException {
+        return sheetProxy.toggleWodPart(date,partCol,newState);
     }
 }

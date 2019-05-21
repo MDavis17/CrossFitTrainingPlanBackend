@@ -28,6 +28,18 @@ public class GoogleSheetProxy {
     private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS,SheetsScopes.DRIVE,SheetsScopes.DRIVE_FILE);
     private static final String CREDENTIALS_FILE_PATH = "/core-photon-240313-20f8791f9586.json";
 
+    public int getDateRow(String date,List<List<Object>> dateColumn) {
+
+        for(int i = 0; i< dateColumn.size(); i++) {
+            String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
+            if(dStr.equals(date)) {
+//                rowNum = i+3;
+//                foundMatch = true;
+                return i+3;
+            }
+        }
+        return -1;
+    }
 
     public String[] getWOD(String date) throws IOException, GeneralSecurityException {
         // [Metcon, metconStatus, Gymnastics, gymnasticsStatus, Oly, olyStatus, Power, powerStatus, Running, runningStatus]
@@ -46,21 +58,10 @@ public class GoogleSheetProxy {
                 .get(spreadsheetId, range)
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
-
-        int rowNum = -1; // unused value
-        boolean foundMatch = false;
-
-        for(int i = 0; i< dateColumn.size(); i++) {
-            String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
-            if(dStr.equals(date)) {
-                rowNum = i+3;
-                foundMatch = true;
-                break;
-            }
-        }
+        int rowNum = getDateRow(date,dateColumn);
 
         // only fill wodParts array if we have a date match
-        if(foundMatch) {
+        if(rowNum != -1) {
             // now get the correct row from sheet
             range = String.format("A%d:K%d",rowNum,rowNum);
             response = service.spreadsheets().values()
@@ -86,7 +87,7 @@ public class GoogleSheetProxy {
         return service;
     }
 
-    public UpdateValuesResponse toggleWodPart(int dateRow, String partCol, boolean newState) throws IOException, GeneralSecurityException{
+    public UpdateValuesResponse toggleWodPart(String date, String partCol, boolean newState) throws IOException, GeneralSecurityException{
         Sheets service = getSheetService();
         ValueRange requestBody = new ValueRange();
         List<List<Object>> values = new ArrayList<>();
@@ -94,7 +95,16 @@ public class GoogleSheetProxy {
         vals.add(newState);
         values.add(vals);
         requestBody.setValues(values);
-        String range = partCol+dateRow;
+
+        //get row from date
+        String range = "A3:A38";
+        ValueRange response = service.spreadsheets().values()
+                .get(spreadsheetId, range)
+                .execute();
+        List<List<Object>> dateColumn = response.getValues();
+        int dateRow = getDateRow(date,dateColumn);
+
+        range = partCol+dateRow;
         System.out.println(requestBody);
         String valueInputOption = "RAW";
         Sheets.Spreadsheets.Values.Update request = service.spreadsheets().values().update(spreadsheetId,range,requestBody);
