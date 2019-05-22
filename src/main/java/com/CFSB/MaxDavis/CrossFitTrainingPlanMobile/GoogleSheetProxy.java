@@ -7,7 +7,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -29,16 +28,21 @@ public class GoogleSheetProxy {
     private static final String CREDENTIALS_FILE_PATH = "/core-photon-240313-20f8791f9586.json";
 
     public int getDateRow(String date,List<List<Object>> dateColumn) {
-
         for(int i = 0; i< dateColumn.size(); i++) {
             String dStr = dateColumn.get(i).toString().replaceAll("[^\\d/]",""); // parse cell date into "m/d/yyyy"
             if(dStr.equals(date)) {
-//                rowNum = i+3;
-//                foundMatch = true;
                 return i+3;
             }
         }
         return -1;
+    }
+
+    public String formatDate(String date) {
+        String[] dateParts = date.split("/");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        return month+"/"+day+"/"+year;
     }
 
     public String[] getWOD(String date) throws IOException, GeneralSecurityException {
@@ -46,11 +50,7 @@ public class GoogleSheetProxy {
         String wodParts[] = {"None","FALSE","None","FALSE","None","FALSE","None","FALSE","None","FALSE"};
 
         //format month and day to remove leading 0s (1 rather than 01)
-        String[] dateParts = date.split("/");
-        int month = Integer.parseInt(dateParts[0]);
-        int day = Integer.parseInt(dateParts[1]);
-        int year = Integer.parseInt(dateParts[2]);
-        date = month+"/"+day+"/"+year;
+        date = formatDate(date);
 
         String range = "A3:A38";
         Sheets service = getSheetService();
@@ -102,7 +102,7 @@ public class GoogleSheetProxy {
                 .get(spreadsheetId, range)
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
-        int dateRow = getDateRow(date,dateColumn);
+        int dateRow = getDateRow(formatDate(date),dateColumn);
 
         range = partCol+dateRow;
         System.out.println(requestBody);
