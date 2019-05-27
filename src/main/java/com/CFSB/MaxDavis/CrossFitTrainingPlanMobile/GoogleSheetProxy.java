@@ -18,6 +18,7 @@ public class GoogleSheetProxy {
     private static final String APPLICATION_NAME = "CrossFit Training Plan API";
     private final String spreadsheetId = "1phA5rOnEct0dZ6Xx6ugX5m6IB_sLMPOgKtblgSsOlpY";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final String dateRange = "A3:A";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -52,10 +53,9 @@ public class GoogleSheetProxy {
         //format month and day to remove leading 0s (1 rather than 01)
         date = formatDate(date);
 
-        String range = "A3:A38";
         Sheets service = getSheetService();
         ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
+                .get(spreadsheetId, dateRange)
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
         int rowNum = getDateRow(date,dateColumn);
@@ -63,7 +63,7 @@ public class GoogleSheetProxy {
         // only fill wodParts array if we have a date match
         if(rowNum != -1) {
             // now get the correct row from sheet
-            range = String.format("A%d:K%d",rowNum,rowNum);
+            String range = String.format("A%d:K%d",rowNum,rowNum);
             response = service.spreadsheets().values()
                     .get(spreadsheetId, range)
                     .execute();
@@ -97,17 +97,15 @@ public class GoogleSheetProxy {
         requestBody.setValues(values);
 
         //get row from date
-        String range = "A3:A38";
         ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
+                .get(spreadsheetId, dateRange)
                 .execute();
         List<List<Object>> dateColumn = response.getValues();
         int dateRow = getDateRow(formatDate(date),dateColumn);
 
-        range = partCol+dateRow;
         System.out.println(requestBody);
         String valueInputOption = "RAW";
-        Sheets.Spreadsheets.Values.Update request = service.spreadsheets().values().update(spreadsheetId,range,requestBody);
+        Sheets.Spreadsheets.Values.Update request = service.spreadsheets().values().update(spreadsheetId,partCol+dateRow,requestBody);
         request.setValueInputOption(valueInputOption);
 
         return request.execute();
